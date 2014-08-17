@@ -16,8 +16,20 @@ public class BoardState {
 		this.putOutWhite = putOutWhite;
 	}
 	
+	public int[] getCountsArray() {
+		return count.clone();
+	}
+	
 	public int getCountAt(int position) {
-		return count[position];
+		return Math.abs(count[position]);
+	}
+	
+	public boolean isPositionWhite(int position) {
+		return count[position]>0;
+	}
+	
+	public boolean isPositionBlack(int position) {
+		return count[position]<0;
 	}
 	
 	public int getNumDead(boolean white) {
@@ -72,6 +84,20 @@ public class BoardState {
 			}
 		}
 		return countInside;
+	}
+	
+	public String getKey() {
+		StringBuilder result = new StringBuilder();
+		for(int i=0; i<BoardUtils.BOARD_SIZE; i++) {
+			result.append((count[i]==0 ? "--" : (count[i]>0 ? count[i]+"W" : (-count[i])+"B")));
+		}
+		result.append(numDeadBlack+""+numDeadWhite+""+putOutBlack+""+putOutWhite);
+		return result.toString();
+	}
+	
+	@Override
+	public String toString() {
+		return BoardUtils.getNiceViewOfBoard(this);
 	}
 	
 }
