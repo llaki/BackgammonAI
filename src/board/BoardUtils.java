@@ -1,5 +1,10 @@
 package board;
 
+import java.util.ArrayList;
+
+import move.MoveUtils;
+import score.Evaluator;
+
 public class BoardUtils {
 
 	public static final int BOARD_SIZE = 24;
@@ -40,17 +45,24 @@ public class BoardUtils {
 		boolean whitesTurn = state.isPositionWhite(boardIndex);
 		int destIndex = (whitesTurn ? boardIndex+moveLength : boardIndex-moveLength);
 		int[] count = state.getCountsArray();
+		int numWhiteDead = state.getNumDead(true), numBlackDead = state.getNumDead(false);
 		if(whitesTurn) {
+			if(count[destIndex] < 0){
+				numBlackDead++;
+				count[destIndex] = 0;
+			}
 			count[boardIndex]--;
 			count[destIndex]++;
 		}
 		else {
+			if(count[destIndex] > 0){
+				numWhiteDead++;
+				count[destIndex] = 0;
+			}
 			count[boardIndex]++;
 			count[destIndex]--;
 		}
-		int killed = ((whitesTurn && state.isPositionBlack(destIndex)) || (!whitesTurn && state.isPositionWhite(destIndex))) ? 1 : 0;
-		return new BoardState(count, (whitesTurn ? state.getNumDead(true) : state.getNumDead(true)+killed), 
-				(!whitesTurn ? state.getNumDead(false) : state.getNumDead(false)+killed), state.numPutAside(true), state.numPutAside(false));
+		return new BoardState(count, numWhiteDead, numBlackDead, state.numPutAside(true), state.numPutAside(false));
 	}
 	
 	public static BoardState getBoardStateAfterPuttingOut(BoardState state, int boardIndex, int moveLength) {
@@ -73,10 +85,18 @@ public class BoardUtils {
 		int numDeadWhite = state.getNumDead(true), numDeadBlack = state.getNumDead(false);
 		int numPutWhite = state.numPutAside(true), numPutBlack = state.numPutAside(false);
 		if(whitesTurn) {
+			if(count[dice-1] < 0) {
+				count[dice-1] = 0;
+				numDeadBlack++;
+			}
 			count[dice-1]++;
 			numDeadWhite--;
 		}
 		else {
+			if(count[BoardUtils.BOARD_SIZE-dice] > 0) {
+				count[BoardUtils.BOARD_SIZE-dice] = 0;
+				numDeadWhite++;
+			}
 			count[BoardUtils.BOARD_SIZE-dice]--;
 			numDeadBlack--;
 		}
@@ -105,7 +125,10 @@ public class BoardUtils {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getNiceViewOfBoard(getStartingPositionBoard()));
+		ArrayList<BoardState> states = MoveUtils.getAllPossibleMoveResults(BoardUtils.getStartingPositionBoard(), 3, 1, true);
+		for(BoardState bs : states) {
+			System.out.println(bs + "\n score = " + Evaluator.getScoreOfStateFor(bs, true));
+		}
 	}
 
 }

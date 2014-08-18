@@ -93,7 +93,7 @@ public class MoveUtils {
 	public static void addAllMovesForDeadPiece(ArrayList<BoardState> listPositions, BoardState currentState, int[] movesToMake, int position, boolean whitesTurn) {
 		int dice = movesToMake[position];
 		if(whitesTurn && currentState.isPositionBlack(dice-1) && currentState.getCountAt(dice-1)>1) return;
-		if(!whitesTurn && currentState.isPositionWhite(dice-1) && currentState.getCountAt(dice-1)>1) return;
+		if(!whitesTurn && currentState.isPositionWhite(24-dice) && currentState.getCountAt(24-dice)>1) return;
 		BoardState resultingBoard = BoardUtils.getBoardForMakingPieceAlive(currentState, movesToMake[position], whitesTurn);
 		addAllPositions(listPositions, resultingBoard, movesToMake, position+1, whitesTurn);
 	}

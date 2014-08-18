@@ -75,11 +75,12 @@ public class EvaluatorUtils {
 	public static double scoreForGoodCoverage(BoardState state, boolean white) {
 		int score = 0;
 		if(white) {
-			for(int i=0; i<=17; i++) {
+			for(int i=0; i<17; i++) {
 				if(isSafe(state, i, white)) {
 					score++;
 				}
 			}
+			if(isSafe(state, 17, white)) score += 3.5;
 			if(isSafe(state, 18, white)) score += 5;
 			if(isSafe(state, 19, white)) score += 4;
 			if(isSafe(state, 20, white)) score += 3;
@@ -88,11 +89,12 @@ public class EvaluatorUtils {
 			if(isSafe(state, 23, white)) score += 1;
 		}
 		else {
-			for(int i=23; i>=6; i--) {
+			for(int i=23; i>6; i--) {
 				if(isSafe(state, i, white)) {
 					score++;
 				}
 			}
+			if(isSafe(state, 6, white)) score += 3.5;
 			if(isSafe(state, 5, white)) score += 5;
 			if(isSafe(state, 4, white)) score += 4;
 			if(isSafe(state, 3, white)) score += 3;
