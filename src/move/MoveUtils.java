@@ -22,6 +22,11 @@ public class MoveUtils {
 			usedKeys.add(key);
 			resultList.add(state);
 		}
+		
+		if(resultList.isEmpty() || resultList.get(0)==null) {
+			resultList.clear();
+			resultList.add(currentState);
+		}
 		return resultList;
 	}
 	
